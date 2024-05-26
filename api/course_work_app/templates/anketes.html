@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Ankete List</h1>
+    <ul>
+        {% for ankete in ankete_list %}
+            <li>{{ ankete.ankete_id }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

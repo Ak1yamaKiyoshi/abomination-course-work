@@ -1,0 +1,48 @@
+Ankete, keywords, open info, closed info request 
+
+
+[DB]
+Ankete
+ - closed_info_id: int
+ - open_info_id: int
+
+Closed info 
+ - closed_info_id: int 
+ - ankete_id: int
+ - date of birth: date 
+ - adress: str
+ - phone_number: str
+ - email: str
+
+Open info 
+ - open_info_id: int 
+ - ankete_id: int
+ - profile_photo: blob 
+ - name: str
+ - description: str
+ - city: str
+
+Request 
+ - request_id
+ - approve: bool 
+ - owner_ankete_id: int
+ - requester_ankete_id: int
+ - timestamp: date
+
+
+API
+Ankete
+ - create ankete: 
+     create[openinfo, closed_info] 
+ - update openinfo [ankete_id, filed]
+ - update closedinfo [ankete_id, field]
+ - delete closedinfo [ankete_id, field]
+ - delete ankete [ankete_id, ankete_id]
+
+Requests
+ - create request [ankete_id, ankete_id]
+
+Search 
+
+
+# track opened anketes by aproved requests
