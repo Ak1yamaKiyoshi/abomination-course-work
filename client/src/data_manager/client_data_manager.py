@@ -1,7 +1,11 @@
 import streamlit as st
+from config import DefaultValues
 from streamlit_cookies_controller import CookieController
 from src.api_client.api import APIClient
 from datetime import datetime, timedelta
+import base64
+from io import BytesIO
+from PIL import Image
 
 now = datetime.now()
 one_month_later = now + timedelta(days=30)
@@ -85,6 +89,13 @@ class ClientDataManager:
             marital_status
         )
 
+
+    def update_profile_picture(self, image_str):
+        return self.api_client.put_profiel_picture(self.ankete_id, image_str)
+
+    def get_profile_picture(self):
+        return self.api_client.get_profile_picture(self.ankete_id)
+            
     def get_ankete(self):
         return self.api_client.get_ankete(self.ankete_id)
 
@@ -113,10 +124,32 @@ class ClientDataManager:
             return True
         return False
 
+
     def register(self, login_str, password_str):
         ankete_id = self.api_client.post_ankete(login_str, password_str)
-        self.api_client.post_open_info(ankete_id, "Username", "Full name", "Sex", 18, "City", "Description", "")
-        self.api_client.post_keywords(ankete_id, "Your Hobbys", "Alcohol relation", "Smoking relation", "Sport?", "Zodiac sign", 140, 18, "Why here", "Marital status")
+        self.api_client.post_profile_picture(ankete_id)
+        self.api_client.post_open_info(
+            ankete_id,
+            DefaultValues.username,
+            DefaultValues.fullname,
+            DefaultValues.sex,
+            DefaultValues.age,
+            DefaultValues.city,
+            DefaultValues.description,
+            ""
+        )
+        self.api_client.post_keywords(
+            ankete_id,
+            DefaultValues.hobby,
+            DefaultValues.alcohol,
+            DefaultValues.smoking,
+            DefaultValues.sport,
+            DefaultValues.zodiac_sign,
+            DefaultValues.height,
+            DefaultValues.age,
+            DefaultValues.why_here,
+            DefaultValues.marital_status
+        )
         self.api_client.post_closed_info(ankete_id, 0)
         if ankete_id:
             self.set_data("is_logged_in", True)

@@ -26,6 +26,7 @@ router.register('open-info', views.OpenInfoViewSet)
 router.register('closed-info', views.ClosedInfoViewSet)
 router.register('password-restoration', views.PasswordRestorationViewSet)
 router.register('keywords', views.KeywordsViewSet)
+router.register('profile_pictures', views.ProfilePictureViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

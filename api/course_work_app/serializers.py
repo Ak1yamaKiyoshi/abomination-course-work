@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from .models import Ankete, InvitationToAnkete, Invitation, OpenInfo, ClosedInfo, PasswordRestoration, Keywords
+from .models import ProfilePicture, Ankete, InvitationToAnkete, Invitation, OpenInfo, ClosedInfo, PasswordRestoration, Keywords
 
 class AnketeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ankete
         fields = '__all__'
+
+class ProfilePictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfilePicture
+        fields = "__all__"
 
 class InvitationToAnketeSerializer(serializers.ModelSerializer):
     class Meta:

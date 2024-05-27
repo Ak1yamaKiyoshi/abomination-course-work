@@ -19,7 +19,6 @@ functions = {
     "Home": pg.landing_page,
     "Profile": pg.profile_page,
     "Search": pg.search_page,
-    "Settings": pg.settings_page,
 }
 
 go_to = functions.get(page)

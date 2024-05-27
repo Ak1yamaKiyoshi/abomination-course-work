@@ -28,10 +28,13 @@ class OpenInfo(models.Model):
     username = models.CharField(max_length=100)
     full_name = models.CharField(max_length=200)
     sex = models.CharField(max_length=10)
-    #profile_picture = models.BinaryField(null=True, blank=True)
     age = models.IntegerField()
     city = models.CharField(max_length=100)
     description = models.TextField()
+
+class ProfilePicture(models.Model):
+    ankete_id = models.IntegerField(primary_key=True)
+    profile_picture = models.TextField()
 
 class ClosedInfo(models.Model):
     ankete_id = models.IntegerField(primary_key=True)

@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Ankete, InvitationToAnkete, Invitation, OpenInfo, ClosedInfo, PasswordRestoration, Keywords
-from .serializers import LoginSerializer, AnketeSerializer, InvitationToAnketeSerializer, InvitationSerializer, OpenInfoSerializer, ClosedInfoSerializer, PasswordRestorationSerializer, KeywordsSerializer
+from .models import ProfilePicture, Ankete, InvitationToAnkete, Invitation, OpenInfo, ClosedInfo, PasswordRestoration, Keywords
+from .serializers import ProfilePictureSerializer, LoginSerializer, AnketeSerializer, InvitationToAnketeSerializer, InvitationSerializer, OpenInfoSerializer, ClosedInfoSerializer, PasswordRestorationSerializer, KeywordsSerializer
 from .models import Ankete
 from rest_framework import status
 from rest_framework.response import Response
@@ -47,6 +47,10 @@ def login_view(request):
     except Ankete.DoesNotExist:
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+class ProfilePictureViewSet(viewsets.ModelViewSet):
+    queryset = ProfilePicture.objects.all()
+    serializer_class = ProfilePictureSerializer
 
 class InvitationToAnketeViewSet(viewsets.ModelViewSet):
     queryset = InvitationToAnkete.objects.all()

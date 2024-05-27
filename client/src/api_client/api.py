@@ -98,7 +98,6 @@ class APIClient:
             "age": age,
             "city": city,
             "description": description,
-            #"profile_picture": profile_picture,
         }
         response = self.session.post(endpoint, json=data)
         return response.status_code == 200
@@ -153,8 +152,8 @@ class APIClient:
             "why_here": why_here,
             "marital_status": marital_status,
         }
-        
         response = self.session.post(endpoint, json=data)
+
         return response.status_code == 200
 
     # OpenInfo
@@ -172,6 +171,26 @@ class APIClient:
         response = self.session.put(endpoint, json=data)
         return response.status_code == 200
 
+    def post_profile_picture(self, ankete_id):
+        endpoint = f"{self.base_url}/profile_pictures/"
+        data = {"ankete_id":ankete_id, "profile_picture":"_"}
+        response = self.session.post(endpoint, json=data)
+        return response.status_code == 200
+    
+    def put_profiel_picture(self, ankete_id, image_str):
+        endpoint = f"{self.base_url}/profile_pictures/{ankete_id}/"
+        data = {"ankete_id":ankete_id, "profile_picture": image_str}
+        response = self.session.put(endpoint, json=data)
+        return response.status_code == 200
+
+    def get_profile_picture(self, ankete_id):
+        endpoint = f"{self.base_url}/profile_pictures/{ankete_id}/"
+        data = {"ankete_id":ankete_id}
+        response = self.session.get(endpoint, json=data)
+        res = response.json().get("profile_picture", None) # 
+        if res and len(res) > 1:
+            return res
+    
     # ClosedInfo
     def put_closed_info(self, ankete_id, phone_number):
         endpoint = f"{self.base_url}/closed-info/{ankete_id}/"
@@ -197,7 +216,6 @@ class APIClient:
             "sport": sport,
             "zodiac_sign": zodiac_sign,
             "height": height,
-            
             "why_here": why_here,
             "marital_status": marital_status,
         }
