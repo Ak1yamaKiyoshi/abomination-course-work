@@ -1,7 +1,8 @@
 import streamlit as st
 from streamlit_navigation_bar import st_navbar
 import os
-import pages as pg
+import src.pages as pg
+
 
 
 st.set_page_config(initial_sidebar_state="collapsed")

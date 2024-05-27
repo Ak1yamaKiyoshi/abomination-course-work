@@ -1,8 +1,8 @@
 from django.db import models
 
 class Ankete(models.Model):
-    ankete_id = models.IntegerField(primary_key=True)
-    login = models.TextField(default="")
+    ankete_id = models.AutoField(primary_key=True)
+    login = models.TextField(unique=True, default="")
     password = models.TextField(default="")
 
     def __str__(self) -> str:

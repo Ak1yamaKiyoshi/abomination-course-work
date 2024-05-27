@@ -35,3 +35,8 @@ class KeywordsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Keywords
         fields = '__all__'
+
+
+class LoginSerializer(serializers.Serializer):
+    login = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
