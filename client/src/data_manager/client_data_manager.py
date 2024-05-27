@@ -1,68 +1,53 @@
-
-
 import streamlit as st
-
 from streamlit_cookies_controller import CookieController
-from streamlit_authenticator import Authenticate
-import streamlit_authenticator as stauth
 from src.api_client.api import APIClient
-
-import time
-
 from datetime import datetime, timedelta
+
 now = datetime.now()
 one_month_later = now + timedelta(days=30)
 
-
-""" 
-is_logged_in: bool
-ankete_id: int
-has_open_data
-"""
-
 class AnketeOpenData:
-    def __init__(self,filled=None, username="", fullname="", sex="", age="", city="", description="") -> None:
+    def __init__(self, filled=None, username="", fullname="", sex="", age="", city="", description="", profile_picture=None):
         self.filled = filled
-        self.username = username 
-        self.fullname  = fullname
+        self.username = username
+        self.fullname = fullname
         self.sex = sex
         self.age = age
         self.city = city
         self.description = description
-
+        self.profile_picture = profile_picture
 
 class ClientDataManager:
-    def __init__(self) -> None:
+    def __init__(self):
         self.controller = CookieController()
         self.api_client = APIClient()
 
     @property
-    def is_logged(self):
-        res = self.get_data('is_logged_in')
-        st.write(res)
-        if res: return True
-        else: return False
+    def is_logged_in(self):
+        return self.get_data('is_logged_in')
 
     @property
     def ankete_id(self):
         return self.get_data("ankete_id")
 
-    @property 
+    @property
     def open_data(self):
-        res=  self.api_client.get_open_info(self.ankete_id)
-        print("opendata" ,res)
+        res = self.api_client.get_open_info(self.ankete_id)
         if res is not None:
-            return AnketeOpenData(filled=True,
+            return AnketeOpenData(
+                filled=True,
                 username=res['username'],
                 fullname=res['full_name'],
                 sex=res['sex'],
                 age=res['age'],
                 city=res['city'],
-                description=res['description'])
+                description=res['description'],
+            )
         return AnketeOpenData()
 
     def update_open_data(self, ankete_open_data: AnketeOpenData):
-        res = self.api_client.post_open_info(
+
+        return self.api_client.put_open_info(
             self.ankete_id,
             ankete_open_data.username,
             ankete_open_data.fullname,
@@ -71,30 +56,73 @@ class ClientDataManager:
             ankete_open_data.city,
             ankete_open_data.description,
         )
-    
 
+    def get_closed_info(self):
+        return self.api_client.get_closed_info(self.ankete_id)
+
+    def update_closed_info(self, phone_number):
+        return self.api_client.put_closed_info(self.ankete_id, phone_number)
+
+    def get_password_restoration(self):
+        return self.api_client.get_password_restoration(self.ankete_id)
+
+    def update_password_restoration(self, code):
+        return self.api_client.put_password_restoration(self.ankete_id, code)
+
+    def get_keywords(self):
+        return self.api_client.get_keywords(self.ankete_id)
+
+    def update_keywords(self, hobby, alcohol, smoking, sport, zodiac_sign, height, why_here, marital_status):
+        return self.api_client.put_keywords(
+            self.ankete_id,
+            hobby,
+            alcohol,
+            smoking,
+            sport,
+            zodiac_sign,
+            height,
+            why_here,
+            marital_status
+        )
+
+    def get_ankete(self):
+        return self.api_client.get_ankete(self.ankete_id)
+
+    def get_invitation_to_ankete(self, invitation_to_ankete_id):
+        return self.api_client.get_invitation_to_ankete(invitation_to_ankete_id)
+
+    def post_invitation_to_ankete(self):
+        return self.api_client.post_invitation_to_ankete(self.ankete_id)
+
+    def get_invitation(self, invitation_id):
+        return self.api_client.get_invitation(invitation_id)
+
+    def post_invitation(self, from_id, to_id, description, photo=None, video=None):
+        return self.api_client.post_invitation(from_id, to_id, description, photo, video)
 
     def logout(self):
         self.set_data("is_logged_in", False)
-        self.set_data("ankte_id", -1)
+        self.set_data("ankete_id", -1)
 
     def login(self, login_str, password_str):
         ankete_id = self.api_client.authenticate(login_str, password_str)
 
         if ankete_id is not None:
             self.set_data("is_logged_in", True)
-            self.set_data("ankete_id",ankete_id)
+            self.set_data("ankete_id", ankete_id)
             return True
         return False
 
     def register(self, login_str, password_str):
-        ankete_id = self.api_client.register(login_str, password_str)
+        ankete_id = self.api_client.post_ankete(login_str, password_str)
+        self.api_client.post_open_info(ankete_id, "Username", "Full name", "Sex", 18, "City", "Description", "")
+        self.api_client.post_keywords(ankete_id, "Your Hobbys", "Alcohol relation", "Smoking relation", "Sport?", "Zodiac sign", 140, 18, "Why here", "Marital status")
+        self.api_client.post_closed_info(ankete_id, 0)
         if ankete_id:
             self.set_data("is_logged_in", True)
-            self.set_data("ankete_id",ankete_id)
+            self.set_data("ankete_id", ankete_id)
             return True
         return False
-            
 
     def set_data(self, key, value):
         st.session_state[key] = value
@@ -107,9 +135,9 @@ class ClientDataManager:
         except:
             cookies = None
 
-        if not cookies: 
+        if not cookies:
             return session_state
-        else: 
+        else:
             return cookies
 
     def del_data(self, key):
