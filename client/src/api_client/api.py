@@ -47,7 +47,7 @@ class APIClient:
         return None
 
     def post_invitation_to_ankete(self, ankete_id):
-        endpoint = f"{self.base_url}/invitation-to-ankete/"
+        endpoint = f"{self.base_url}/invitation/"
         data = {"ankete_id": ankete_id}
         response = self.session.post(endpoint, json=data)
         res_data = response.json()
@@ -55,6 +55,20 @@ class APIClient:
         if invitation_id:
             return invitation_id
         return None
+
+    def delete_invitation(self, invitiation_id):
+        endpoint = f"{self.base_url}/invitation/{invitiation_id}"
+        response = self.session.post(endpoint)
+        res_data = response.json()
+        return res_data
+    
+    def search_invitation(self, to):
+        endpoint = f"{self.base_url}/invitation/"
+        params = {"to_id": to}
+        response = self.session.get(endpoint, params=params)
+
+        return response.json()
+
 
     # Invitation
     def get_invitation(self, invitation_id):
@@ -64,16 +78,17 @@ class APIClient:
             return response.json()
         return None
 
-    def post_invitation(self, from_id, to_id, description, photo=None, video=None):
+    def post_invitation(self, from_id, to_id, description="description", photo="1"):
         endpoint = f"{self.base_url}/invitation/"
         data = {
             "from_id": from_id,
             "to_id": to_id,
             "description": description,
             "photo": photo,
-            "video": video,
         }
         response = self.session.post(endpoint, json=data)
+        
+        print(response.content)
         res_data = response.json()
         invitation_id = res_data.get("invitation_id")
         if invitation_id:
@@ -131,9 +146,18 @@ class APIClient:
         return response.status_code == 200
 
     # Keywords
+    def search_keywords(self, params):
+        endpoint = f"{self.base_url}/keywords/"
+        response = self.session.get(endpoint, params=params)
+
+        if response.status_code == 200:
+            return response.json()
+        return None
+
     def get_keywords(self, ankete_id):
         endpoint = f"{self.base_url}/keywords/{ankete_id}/"
         response = self.session.get(endpoint)
+        
         if response.status_code == 200:
             return response.json()
         return None
@@ -204,6 +228,8 @@ class APIClient:
         data = {"code": code, "ankete_id":ankete_id}
         response = self.session.put(endpoint, json=data)
         return response.status_code == 200
+
+
 
     # Keywords
     def put_keywords(self, ankete_id, hobby, alcohol, smoking, sport, zodiac_sign, height,  why_here, marital_status):

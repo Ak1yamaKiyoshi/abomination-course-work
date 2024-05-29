@@ -12,13 +12,14 @@ options = {
     "show_menu": False,
     "show_sidebar": False,
 }
-pages = ["Home", "Profile", "Search", "Settings"]
+pages = ["Home", "Your Profile", "Search Anketes", "Likes"]
 page = st_navbar(pages, options=options)
 
 functions = {
     "Home": pg.landing_page,
-    "Profile": pg.profile_page,
-    "Search": pg.search_page,
+    "Your Profile": pg.profile_page,
+    "Search Anketes": pg.search_page,
+    "Likes": pg.settings_page,
 }
 
 go_to = functions.get(page)

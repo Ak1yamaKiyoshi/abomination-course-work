@@ -16,6 +16,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from .serializers import LoginSerializer
+from django.db.models import Q
 
 
 class AnketeViewSet(viewsets.ModelViewSet):
@@ -59,6 +60,20 @@ class InvitationToAnketeViewSet(viewsets.ModelViewSet):
 class InvitationViewSet(viewsets.ModelViewSet):
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
+    
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query_params = self.request.query_params.dict()
+
+        query_filters = Q()
+
+        for field in ['to_id']:
+            value = query_params.get(field)
+            if value and value != 'None':
+                query_filters &= Q(**{f'{field}__iexact': value})
+
+        return queryset.filter(query_filters)
 
 class OpenInfoViewSet(viewsets.ModelViewSet):
     queryset = OpenInfo.objects.all()
@@ -75,4 +90,24 @@ class PasswordRestorationViewSet(viewsets.ModelViewSet):
 class KeywordsViewSet(viewsets.ModelViewSet):
     queryset = Keywords.objects.all()
     serializer_class = KeywordsSerializer
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query_params = self.request.query_params.dict()
+
+        query_filters = Q()
+
+        # Handle string fields
+        for field in ['alcohol', 'smoking', 'sport', 'zodiac_sign', 'marital_status']:
+            value = query_params.get(field)
+            if value and value != 'None':
+                query_filters &= Q(**{f'{field}__iexact': value})
+
+        # Handle integer fields
+        height = query_params.get('height')
+        if height is not None:
+            query_filters &= Q(height=height)
+
+        return queryset.filter(query_filters)
+
 from .models import Ankete

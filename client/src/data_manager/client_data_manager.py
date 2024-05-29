@@ -25,7 +25,7 @@ class ClientDataManager:
     def __init__(self):
         self.controller = CookieController()
         self.api_client = APIClient()
-
+    
     @property
     def is_logged_in(self):
         return self.get_data('is_logged_in')

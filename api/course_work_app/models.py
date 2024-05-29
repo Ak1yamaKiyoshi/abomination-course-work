@@ -8,20 +8,13 @@ class Ankete(models.Model):
     def __str__(self) -> str:
         return self.ankete_id
 
-class InvitationToAnkete(models.Model):
-    invitation_id = models.IntegerField(primary_key=True)
-    ankete_id = models.IntegerField()
-    
-    def __str__(self) -> str:
-        return f"ankete_id: {self.ankete_id}, invitation_id: {self.invitation_id}"
 
 class Invitation(models.Model):
-    invitation_id = models.IntegerField(primary_key=True)
+    invitation_id = models.AutoField(primary_key=True)
     from_id = models.IntegerField()
     to_id = models.IntegerField()
     description = models.TextField()
-    photo = models.BinaryField(null=True, blank=True)
-    video = models.BinaryField(null=True, blank=True)
+    photo = models.TextField()
 
 class OpenInfo(models.Model):
     ankete_id = models.IntegerField(primary_key=True)
