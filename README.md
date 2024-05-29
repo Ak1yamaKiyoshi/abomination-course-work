@@ -4,7 +4,7 @@ There will be no guide on dependency instalation due to i don't want you to try 
 It's horrible, and was written in 3 evenings. (code part) + 1 (report).
 
 
-Architecture decisions are terrible, security issues everywhere. Redundant architecture. 
+Architecture decisions are terrible, security issues everywhere. 
 
 
 Slow frontend. 
